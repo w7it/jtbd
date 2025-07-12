@@ -5,6 +5,7 @@
   "scripts": {
     "start": "vite dev",
     "build": "vite build",
+    "test:e2e": "playwright test --ui",
     "fmt": "prettier --write ."
   },
   "keywords": [
@@ -40,6 +41,7 @@
     "zod": "^4.0.5"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.9.0",
     "@playwright/test": "^1.54.1",
     "@types/node": "^24.0.13",
     "@types/react": "^19.1.8",
