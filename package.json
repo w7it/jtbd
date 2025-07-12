@@ -16,7 +16,9 @@
   "license": "MIT",
   "packageManager": "pnpm@10.12.4",
   "dependencies": {
+    "@hookform/resolvers": "^5.1.1",
     "@libsql/client": "^0.15.9",
+    "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-slot": "^1.2.3",
     "@tailwindcss/postcss": "^4.1.11",
     "@tanstack/react-router": "^1.127.3",
@@ -31,9 +33,11 @@
     "postcss": "^8.5.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-hook-form": "^7.60.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.11",
-    "vite": "^7.0.4"
+    "vite": "^7.0.4",
+    "zod": "^4.0.5"
   },
   "devDependencies": {
     "@types/react": "^19.1.8",
