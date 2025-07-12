@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1752316819056,
+      "tag": "0000_lovely_dragon_man",
+      "breakpoints": true
+    }
+  ]
+}
