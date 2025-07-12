@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { reactStartCookies } from "better-auth/react-start";
+import { admin } from "better-auth/plugins";
 import { db } from "./db.ts";
 
 export const auth = betterAuth({
@@ -8,7 +9,7 @@ export const auth = betterAuth({
     provider: "sqlite",
     usePlural: true,
   }),
-  plugins: [reactStartCookies()],
+  plugins: [reactStartCookies(), admin()],
   emailAndPassword: {
     enabled: true,
   },
