@@ -6,6 +6,39 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a JTBD (Jobs-to-be-Done) Builder application using TanStack Start - a full-stack React framework with file-based routing and server functions.
 
+### Product Purpose
+The JTBD Builder is a tool for storing and visualizing Jobs-to-be-Done scenarios with subsequent application for:
+- Strategic analysis
+- Customer feedback analysis
+- Task documentation and prioritization
+
+### Target Users
+- **Primary Users**: Product managers working on IT product development
+- **Work Style**: Primarily individual work with occasional team material sharing
+- **Use Cases**: Personal JTBD analysis with selective team collaboration
+
+### JTBD Methodology
+- **Initial Approach**: Classic Job Story format ("When I [situation], I want to [motivation], so I can [expected outcome]")
+- **Data Model**: To be defined during development based on user needs and feedback
+
+### UI/UX Design
+- **Design Style**: Minimalistic/clean design approach
+- **Component Library**: shadcn/ui components
+- **Target Experience**: Clean, focused interface for product managers
+
+### Technical Requirements
+- **Project Type**: Open-source solution
+- **Deployment**: Single Docker container with one process
+- **Data Storage**: SQLite database on server
+- **ORM**: Drizzle ORM for database access
+- **Architecture**: Self-contained application for easy deployment
+
+### Development Standards
+- **Code Quality**: High standards with self-documenting code
+- **Naming**: Clear, descriptive variable and method names that explain purpose
+- **Testing**: Comprehensive tests that serve as system documentation
+- **Documentation**: Tests should demonstrate how system components work
+
 ## Commands
 
 - **Development**: `pnpm start` - Starts the development server on port 3000
