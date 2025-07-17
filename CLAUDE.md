@@ -38,6 +38,7 @@ The JTBD Builder is a tool for storing and visualizing Jobs-to-be-Done scenarios
 - **Naming**: Clear, descriptive variable and method names that explain purpose
 - **Testing**: Comprehensive tests that serve as system documentation
 - **Documentation**: Tests should demonstrate how system components work
+- **React Components**: Separate logic from markup using smart (container) and dumb (presentational) components pattern
 
 ## Commands
 
