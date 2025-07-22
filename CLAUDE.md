@@ -7,26 +7,45 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a JTBD (Jobs-to-be-Done) Builder application using TanStack Start - a full-stack React framework with file-based routing and server functions.
 
 ### Product Purpose
-The JTBD Builder is a tool for storing and visualizing Jobs-to-be-Done scenarios with subsequent application for:
-- Strategic analysis
-- Customer feedback analysis
-- Task documentation and prioritization
+
+The JTBD Builder is a platform for working with JTBD graphs during customer development interviews. Product managers create job graphs of respondents during interviews to understand their workflow and motivations.
 
 ### Target Users
-- **Primary Users**: Product managers working on IT product development
-- **Work Style**: Primarily individual work with occasional team material sharing
-- **Use Cases**: Personal JTBD analysis with selective team collaboration
+
+- **Primary Users**: Product managers conducting customer development interviews
+- **Work Style**: Real-time job mapping during interviews
+- **Use Cases**: Creating and visualizing respondent job graphs to understand customer workflows
 
 ### JTBD Methodology
-- **Initial Approach**: Classic Job Story format ("When I [situation], I want to [motivation], so I can [expected outcome]")
-- **Data Model**: To be defined during development based on user needs and feedback
+
+The platform uses a structured approach to map jobs with the following aspects:
+
+#### Job Structure
+
+Each job consists of:
+
+1. **When** - Context/emotions/experience/trigger
+2. **Want** - Job name (clear expected outcome)
+3. **So that** - Higher-level job name
+4. **Solution** - Current solution used to perform this job
+5. **Additional aspects** - Satisfaction level, importance, problems with current solution
+
+#### Job Connection Algorithm
+
+Jobs are connected using this methodology:
+
+- **Higher-level jobs**: Discovered by asking "So that what?" about the current job
+- **Sub-jobs**: Found by asking "What did you do to achieve [job's expected outcome]?" which returns a list of actions
+- For each action, ask "What result did you want to achieve?" to identify the underlying job
 
 ### UI/UX Design
+
 - **Design Style**: Minimalistic/clean design approach
 - **Component Library**: shadcn/ui components
 - **Target Experience**: Clean, focused interface for product managers
 
 ### Technical Requirements
+
 - **Project Type**: Open-source solution
 - **Deployment**: Single Docker container with one process
 - **Data Storage**: SQLite database on server
@@ -34,6 +53,7 @@ The JTBD Builder is a tool for storing and visualizing Jobs-to-be-Done scenarios
 - **Architecture**: Self-contained application for easy deployment
 
 ### Development Standards
+
 - **Code Quality**: High standards with self-documenting code
 - **Naming**: Clear, descriptive variable and method names that explain purpose
 - **Testing**: Comprehensive tests that serve as system documentation
@@ -50,12 +70,14 @@ The JTBD Builder is a tool for storing and visualizing Jobs-to-be-Done scenarios
 ## Architecture
 
 ### Framework Stack
+
 - **TanStack Start**: Full-stack React framework with SSR/SSG capabilities
 - **TanStack Router**: File-based routing with type-safe navigation
 - **Vite**: Build tool and development server
 - **TypeScript**: Type-safe JavaScript with React JSX support
 
 ### Project Structure
+
 - `src/routes/`: File-based routing directory
   - `__root.tsx`: Root layout component with HTML document structure
   - `index.tsx`: Home page route with server functions
@@ -63,12 +85,14 @@ The JTBD Builder is a tool for storing and visualizing Jobs-to-be-Done scenarios
 - `src/router.tsx`: Router configuration and type declarations
 
 ### Key Patterns
+
 - **Server Functions**: Use `createServerFn()` for server-side operations (see `src/routes/index.tsx`)
 - **Route Components**: Export `Route` using `createFileRoute()` or `createRootRoute()`
 - **Type Safety**: Router types are auto-generated and globally registered
 - **SSR-Ready**: Components render on both server and client
 
 ### Development Notes
+
 - Route tree is auto-generated - don't edit `routeTree.gen.ts`
 - Server functions handle both GET and POST methods with validation
 - Router invalidation is used to refresh data after mutations
