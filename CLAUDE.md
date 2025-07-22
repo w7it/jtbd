@@ -38,6 +38,17 @@ Jobs are connected using this methodology:
 - **Sub-jobs**: Found by asking "What did you do to achieve [job's expected outcome]?" which returns a list of actions
 - For each action, ask "What result did you want to achieve?" to identify the underlying job
 
+### Interview and Job Graph Creation Process
+
+- Product managers create job graphs tailored to specific respondents during interviews
+- Interview time constraints mean graphs are often partial and focus on specific areas of interest
+- After multiple interviews, an aggregated job graph can be compiled, representing collective insights from individual respondent interviews
+- **Aggregated Graph Versioning**:
+  - The aggregated graph supports versioning to track its evolution over time
+  - Aggregation is manual, with a manager adding graphs from new interviews
+  - Managers can edit job names and link jobs by name to existing jobs in the aggregated graph
+  - The aggregated graph always allows viewing the original respondent's job graph with its specific details
+
 ### UI/UX Design
 
 - **Design Style**: Minimalistic/clean design approach
@@ -97,3 +108,9 @@ Jobs are connected using this methodology:
 - Server functions handle both GET and POST methods with validation
 - Router invalidation is used to refresh data after mutations
 - Uses React 19 with modern patterns
+
+### Product Design Details
+
+- **Graph Versioning**:
+  - A new version of the aggregated graph is explicitly added by pressing the Save button
+  - Auto-saving of draft is implemented in the local state (enabling offline work)
