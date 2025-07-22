@@ -1,0 +1,5 @@
+packages:
+  - "."
+
+# Needed for libsql package
+shamefullyHoist: true
