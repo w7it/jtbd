@@ -48,6 +48,7 @@ Jobs are connected using this methodology:
   - Aggregation is manual, with a manager adding graphs from new interviews
   - Managers can edit job names and link jobs by name to existing jobs in the aggregated graph
   - The aggregated graph always allows viewing the original respondent's job graph with its specific details
+  - For versioning aggregated graphs, a snapshot-based approach is used
 - **Important Graph Creation Workflow**:
   - The user must first create an aggregated graph before creating a local graph for a specific respondent within it
 
@@ -126,3 +127,10 @@ Jobs are connected using this methodology:
   - `feat: add job graph versioning`
   - `fix: resolve connection algorithm bug`
   - `docs: update CLAUDE.md with commit guidelines`
+
+### Database Guidelines
+
+- The entire database schema is declared in `@src/server/db/schema.ts`
+- For generating database migrations, use the command: `npx drizzle-kit generate --name=some_miggration_name`
+  - Replace `some_miggration_name` with a meaningful name that describes the database schema changes
+  - Check the database schema changes in `@src/server/db/schemes/` to create descriptive migration names
