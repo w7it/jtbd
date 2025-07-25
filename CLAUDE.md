@@ -48,6 +48,8 @@ Jobs are connected using this methodology:
   - Aggregation is manual, with a manager adding graphs from new interviews
   - Managers can edit job names and link jobs by name to existing jobs in the aggregated graph
   - The aggregated graph always allows viewing the original respondent's job graph with its specific details
+- **Important Graph Creation Workflow**:
+  - The user must first create an aggregated graph before creating a local graph for a specific respondent within it
 
 ### UI/UX Design
 
