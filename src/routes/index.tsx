@@ -1,10 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Editor } from "@/components/editor/Editor";
+import { PageSpinner } from "@/components/ui/page-spinner.tsx";
+import { useBoardData } from "@/hooks/useBoardData.tsx";
+import { useCurrentProject } from "@/hooks/useCurrentProject.tsx";
 
 export const Route = createFileRoute("/")({
   component: Home,
 });
 
 function Home() {
-  return <Editor />;
+  const [currentProject] = useCurrentProject();
+  const boardData = useBoardData(currentProject?.boardId ?? null);
+
+  if (!boardData) {
+    return <PageSpinner />;
+  }
+
+  return <Editor {...boardData} />;
 }

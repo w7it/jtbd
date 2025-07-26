@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "e3cecb0f-a9b2-43b4-81c4-eb7e45a8a9fa",
+  "id": "fa4b57be-7450-4dae-9da9-8ac39eef19d7",
   "prevId": "71a4ca09-d33d-47ab-b361-3c0c12a2ad4a",
   "tables": {
     "accounts": {
@@ -484,8 +484,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "related_id": {
-          "name": "related_id",
+        "board_id": {
+          "name": "board_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -535,12 +535,12 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "project_interviews_related_id_boards_id_fk": {
-          "name": "project_interviews_related_id_boards_id_fk",
+        "project_interviews_board_id_boards_id_fk": {
+          "name": "project_interviews_board_id_boards_id_fk",
           "tableFrom": "project_interviews",
           "tableTo": "boards",
           "columnsFrom": [
-            "related_id"
+            "board_id"
           ],
           "columnsTo": [
             "id"
@@ -656,8 +656,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "related_id": {
-          "name": "related_id",
+        "board_id": {
+          "name": "board_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -700,12 +700,12 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "project_versions_related_id_boards_id_fk": {
-          "name": "project_versions_related_id_boards_id_fk",
+        "project_versions_board_id_boards_id_fk": {
+          "name": "project_versions_board_id_boards_id_fk",
           "tableFrom": "project_versions",
           "tableTo": "boards",
           "columnsFrom": [
-            "related_id"
+            "board_id"
           ],
           "columnsTo": [
             "id"
@@ -733,6 +733,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "last_version_id": {
+          "name": "last_version_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "title": {
@@ -777,6 +784,19 @@
             "id"
           ],
           "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "projects_last_version_id_project_versions_id_fk": {
+          "name": "projects_last_version_id_project_versions_id_fk",
+          "tableFrom": "projects",
+          "tableTo": "project_versions",
+          "columnsFrom": [
+            "last_version_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -1082,6 +1102,20 @@
           "name": "id",
           "type": "text",
           "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "related_type": {
+          "name": "related_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "related_id": {
+          "name": "related_id",
+          "type": "text",
+          "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },

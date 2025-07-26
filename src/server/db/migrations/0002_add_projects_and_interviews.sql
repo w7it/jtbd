@@ -15,13 +15,13 @@ CREATE TABLE `project_interview_jobs` (
 CREATE TABLE `project_interviews` (
 	`id` text PRIMARY KEY NOT NULL,
 	`project_version_id` text NOT NULL,
-	`related_id` text NOT NULL,
+	`board_id` text NOT NULL,
 	`title` text NOT NULL,
 	`description` text,
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL,
 	FOREIGN KEY (`project_version_id`) REFERENCES `project_versions`(`id`) ON UPDATE no action ON DELETE cascade,
-	FOREIGN KEY (`related_id`) REFERENCES `boards`(`id`) ON UPDATE no action ON DELETE cascade
+	FOREIGN KEY (`board_id`) REFERENCES `boards`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `project_jobs` (
@@ -39,22 +39,24 @@ CREATE TABLE `project_jobs` (
 CREATE TABLE `project_versions` (
 	`id` text PRIMARY KEY NOT NULL,
 	`project_id` text NOT NULL,
-	`related_id` text NOT NULL,
+	`board_id` text NOT NULL,
 	`version` text NOT NULL,
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL,
 	FOREIGN KEY (`project_id`) REFERENCES `projects`(`id`) ON UPDATE no action ON DELETE cascade,
-	FOREIGN KEY (`related_id`) REFERENCES `boards`(`id`) ON UPDATE no action ON DELETE cascade
+	FOREIGN KEY (`board_id`) REFERENCES `boards`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `projects` (
 	`id` text PRIMARY KEY NOT NULL,
 	`owner_id` text NOT NULL,
+	`last_version_id` text,
 	`title` text NOT NULL,
 	`description` text,
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL,
-	FOREIGN KEY (`owner_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade
+	FOREIGN KEY (`owner_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`last_version_id`) REFERENCES `project_versions`(`id`) ON UPDATE no action ON DELETE set null
 );
 --> statement-breakpoint
 CREATE TABLE `board_discussion` (
@@ -101,6 +103,8 @@ CREATE TABLE `board_sticky_notes` (
 --> statement-breakpoint
 CREATE TABLE `boards` (
 	`id` text PRIMARY KEY NOT NULL,
+	`related_type` text NOT NULL,
+	`related_id` text NOT NULL,
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL
 );

@@ -1,15 +1,16 @@
+import { randomUUID } from "node:crypto";
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { BoardType, NodeType } from "@/components/constants/boards.ts";
 import { users } from "./auth.ts";
 import { timestamps } from "./helpers.ts";
+import { relations } from "drizzle-orm";
 
-export enum NodeType {
-  STICKY_NOTE = "STICKY_NOTE",
-  PROJECT_JOB = "PROJECT_JOB",
-  PROJECT_INTERVIEW_JOB = "PROJECT_INTERVIEW_JOB",
-  DISCUSSION = "DISCUSSION",
-}
+const relatedBoardTypeEnum = [
+  BoardType.PROJECT,
+  BoardType.PROJECT_INTERVIEW,
+] as const;
 
-const relatedTypeEnum = [
+const relatedNodeTypeEnum = [
   NodeType.STICKY_NOTE,
   NodeType.DISCUSSION,
   NodeType.PROJECT_JOB,
@@ -17,26 +18,42 @@ const relatedTypeEnum = [
 ] as const;
 
 export const boards = sqliteTable("boards", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
+
+  // Polymorphic relationship
+  relatedType: text("related_type", { enum: relatedBoardTypeEnum }).notNull(),
+  relatedId: text("related_id").notNull(),
 
   ...timestamps(),
 });
 
+export const boardsRelations = relations(boards, ({ many }) => ({
+  boardNodes: many(boardNodes),
+}));
+
 export const boardNodes = sqliteTable("board_nodes", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
+
   boardId: text("board_id")
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
 
   // Polymorphic relationship
-  relatedType: text("related_type", { enum: relatedTypeEnum }).notNull(),
+  relatedType: text("related_type", { enum: relatedNodeTypeEnum }).notNull(),
   relatedId: text("related_id").notNull(),
 
   ...timestamps(),
 });
 
 export const boardStickyNotes = sqliteTable("board_sticky_notes", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
+
   boardNodeId: text("board_node_id")
     .notNull()
     .references(() => boardNodes.id, { onDelete: "cascade" }),
@@ -48,7 +65,10 @@ export const boardStickyNotes = sqliteTable("board_sticky_notes", {
 });
 
 export const boardDiscussion = sqliteTable("board_discussion", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
+
   boardNodeId: text("board_node_id")
     .notNull()
     .references(() => boardNodes.id, { onDelete: "cascade" }),
@@ -64,7 +84,10 @@ export const boardDiscussion = sqliteTable("board_discussion", {
 });
 
 export const boardDiscussionReplies = sqliteTable("board_discussion_replies", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
+
   discussionId: text("discussion_id")
     .notNull()
     .references(() => boardDiscussion.id, { onDelete: "cascade" }),

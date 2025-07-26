@@ -1,4 +1,5 @@
 import { useCurrentProject } from "@/hooks/useCurrentProject.tsx";
+import { authClient } from "@/lib/authClient.ts";
 import { Button } from "../ui/button.tsx";
 import {
   DropdownMenu,
@@ -11,6 +12,24 @@ import {
 import { useProjects } from "@/hooks/useProjects.tsx";
 
 export function ProjectSwitcher() {
+  const session = authClient.useSession();
+
+  if (session.isPending) {
+    return null;
+  }
+
+  if (!session.data?.user) {
+    return (
+      <Button variant="secondary" className="!cursor-default">
+        Demo project
+      </Button>
+    );
+  }
+
+  return <ProjectSwitcherForUser />;
+}
+
+function ProjectSwitcherForUser() {
   const [currentProject, setCurrentProjectId] = useCurrentProject();
 
   if (!currentProject) {
@@ -24,7 +43,7 @@ export function ProjectSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary">{currentProject.name}</Button>
+        <Button variant="secondary">{currentProject.title}</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent side="bottom" align="start">
         <ProjectList setCurrentProjectId={setCurrentProjectId} />
@@ -49,7 +68,7 @@ function ProjectList({ setCurrentProjectId }: ProjectListProps) {
           key={project.id}
           onClick={() => setCurrentProjectId(project.id)}
         >
-          {project.name}
+          {project.title}
         </DropdownMenuItem>
       ))}
     </>

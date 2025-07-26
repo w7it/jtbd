@@ -10,7 +10,7 @@ interface StickyNoteData {
 
 export const StickyNoteNode = React.memo(({ data, id }: NodeProps) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [content, setContent] = useState(
+  const [content, _setContent] = useState(
     (data as StickyNoteData)?.content || "",
   );
   const textareaRef = useRef<HTMLTextAreaElement>(null);
