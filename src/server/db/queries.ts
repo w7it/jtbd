@@ -35,6 +35,6 @@ export const createEmptyProject = db
 export const getBoardDataById = db.query.boards
   .findFirst({
     where: (boards, { eq, sql }) => eq(boards.id, sql.placeholder("boardId")),
-    with: { boardNodes: true },
+    with: { nodes: true },
   })
   .prepare();

@@ -1,4 +1,4 @@
-import { useCurrentProject } from "@/hooks/useCurrentProject.tsx";
+import { useCurrentProject } from "@/hooks/useCurrentProject.ts";
 import { authClient } from "@/lib/authClient.ts";
 import { Button } from "../ui/button.tsx";
 import {
@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { useProjects } from "@/hooks/useProjects.tsx";
+import { useProjects } from "@/hooks/useProjects.ts";
 
 export function ProjectSwitcher() {
   const session = authClient.useSession();

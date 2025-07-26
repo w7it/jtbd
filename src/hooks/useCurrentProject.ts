@@ -1,9 +1,9 @@
-import useLocalStorage from "use-local-storage";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { getProjectById, getProjects } from "@/server/functions/projects";
 import { useEffect } from "react";
 import { authClient } from "@/lib/authClient.ts";
+import { useLocalStorage } from "./useLocalStorage.ts";
 
 type Project = {
   readonly id: string;

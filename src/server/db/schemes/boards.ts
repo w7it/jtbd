@@ -30,7 +30,7 @@ export const boards = sqliteTable("boards", {
 });
 
 export const boardsRelations = relations(boards, ({ many }) => ({
-  boardNodes: many(boardNodes),
+  nodes: many(boardNodes),
 }));
 
 export const boardNodes = sqliteTable("board_nodes", {
@@ -48,6 +48,13 @@ export const boardNodes = sqliteTable("board_nodes", {
 
   ...timestamps(),
 });
+
+export const boardNodesRelations = relations(boardNodes, ({ one }) => ({
+  board: one(boards, {
+    fields: [boardNodes.boardId],
+    references: [boards.id],
+  }),
+}));
 
 export const boardStickyNotes = sqliteTable("board_sticky_notes", {
   id: text("id")

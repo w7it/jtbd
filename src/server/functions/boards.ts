@@ -10,7 +10,7 @@ export const getBoardDataById = createServerFn()
     if (!result) return null;
 
     return {
-      nodes: result.boardNodes.map(
+      nodes: result.nodes.map(
         (node) =>
           ({
             id: node.id,
