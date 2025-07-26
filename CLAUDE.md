@@ -116,3 +116,13 @@ Jobs are connected using this methodology:
 - **Graph Versioning**:
   - A new version of the aggregated graph is explicitly added by pressing the Save button
   - Auto-saving of draft is implemented in the local state (enabling offline work)
+
+## Commit Guidelines
+
+- Use conventional commits format: `type(scope): description`
+- Common types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+- Keep commit message descriptions short and concise
+- Examples:
+  - `feat: add job graph versioning`
+  - `fix: resolve connection algorithm bug`
+  - `docs: update CLAUDE.md with commit guidelines`
