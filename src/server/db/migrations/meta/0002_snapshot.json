@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "99c627e5-c8fb-48d9-9ad0-9722cadaf5b6",
+  "id": "e3cecb0f-a9b2-43b4-81c4-eb7e45a8a9fa",
   "prevId": "71a4ca09-d33d-47ab-b361-3c0c12a2ad4a",
   "tables": {
     "accounts": {
@@ -361,8 +361,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "aggregated_graph_local_graphs": {
-      "name": "aggregated_graph_local_graphs",
+    "project_interview_jobs": {
+      "name": "project_interview_jobs",
       "columns": {
         "id": {
           "name": "id",
@@ -371,15 +371,36 @@
           "notNull": true,
           "autoincrement": false
         },
-        "local_graph_id": {
-          "name": "local_graph_id",
+        "project_interview_id": {
+          "name": "project_interview_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "aggregated_graph_version_id": {
-          "name": "aggregated_graph_version_id",
+        "project_job_id": {
+          "name": "project_job_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "parent_job_id": {
+          "name": "parent_job_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "data": {
+          "name": "data",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -402,12 +423,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "aggregated_graph_local_graphs_local_graph_id_local_graphs_id_fk": {
-          "name": "aggregated_graph_local_graphs_local_graph_id_local_graphs_id_fk",
-          "tableFrom": "aggregated_graph_local_graphs",
-          "tableTo": "local_graphs",
+        "project_interview_jobs_project_interview_id_project_interviews_id_fk": {
+          "name": "project_interview_jobs_project_interview_id_project_interviews_id_fk",
+          "tableFrom": "project_interview_jobs",
+          "tableTo": "project_interviews",
           "columnsFrom": [
-            "local_graph_id"
+            "project_interview_id"
           ],
           "columnsTo": [
             "id"
@@ -415,12 +436,111 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "aggregated_graph_local_graphs_aggregated_graph_version_id_aggregated_graph_versions_id_fk": {
-          "name": "aggregated_graph_local_graphs_aggregated_graph_version_id_aggregated_graph_versions_id_fk",
-          "tableFrom": "aggregated_graph_local_graphs",
-          "tableTo": "aggregated_graph_versions",
+        "project_interview_jobs_project_job_id_project_jobs_id_fk": {
+          "name": "project_interview_jobs_project_job_id_project_jobs_id_fk",
+          "tableFrom": "project_interview_jobs",
+          "tableTo": "project_jobs",
           "columnsFrom": [
-            "aggregated_graph_version_id"
+            "project_job_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "project_interview_jobs_parent_job_id_project_interview_jobs_id_fk": {
+          "name": "project_interview_jobs_parent_job_id_project_interview_jobs_id_fk",
+          "tableFrom": "project_interview_jobs",
+          "tableTo": "project_interview_jobs",
+          "columnsFrom": [
+            "parent_job_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "project_interviews": {
+      "name": "project_interviews",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "project_version_id": {
+          "name": "project_version_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "related_id": {
+          "name": "related_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "project_interviews_project_version_id_project_versions_id_fk": {
+          "name": "project_interviews_project_version_id_project_versions_id_fk",
+          "tableFrom": "project_interviews",
+          "tableTo": "project_versions",
+          "columnsFrom": [
+            "project_version_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "project_interviews_related_id_boards_id_fk": {
+          "name": "project_interviews_related_id_boards_id_fk",
+          "tableFrom": "project_interviews",
+          "tableTo": "boards",
+          "columnsFrom": [
+            "related_id"
           ],
           "columnsTo": [
             "id"
@@ -433,8 +553,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "aggregated_graph_versions": {
-      "name": "aggregated_graph_versions",
+    "project_jobs": {
+      "name": "project_jobs",
       "columns": {
         "id": {
           "name": "id",
@@ -443,15 +563,101 @@
           "notNull": true,
           "autoincrement": false
         },
-        "aggregated_graph_id": {
-          "name": "aggregated_graph_id",
+        "project_version_id": {
+          "name": "project_version_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "board_id": {
-          "name": "board_id",
+        "parent_job_id": {
+          "name": "parent_job_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "data": {
+          "name": "data",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "project_jobs_project_version_id_project_versions_id_fk": {
+          "name": "project_jobs_project_version_id_project_versions_id_fk",
+          "tableFrom": "project_jobs",
+          "tableTo": "project_versions",
+          "columnsFrom": [
+            "project_version_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "project_jobs_parent_job_id_project_jobs_id_fk": {
+          "name": "project_jobs_parent_job_id_project_jobs_id_fk",
+          "tableFrom": "project_jobs",
+          "tableTo": "project_jobs",
+          "columnsFrom": [
+            "parent_job_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "project_versions": {
+      "name": "project_versions",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "related_id": {
+          "name": "related_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -481,12 +687,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "aggregated_graph_versions_aggregated_graph_id_aggregated_graphs_id_fk": {
-          "name": "aggregated_graph_versions_aggregated_graph_id_aggregated_graphs_id_fk",
-          "tableFrom": "aggregated_graph_versions",
-          "tableTo": "aggregated_graphs",
+        "project_versions_project_id_projects_id_fk": {
+          "name": "project_versions_project_id_projects_id_fk",
+          "tableFrom": "project_versions",
+          "tableTo": "projects",
           "columnsFrom": [
-            "aggregated_graph_id"
+            "project_id"
           ],
           "columnsTo": [
             "id"
@@ -494,12 +700,12 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "aggregated_graph_versions_board_id_boards_id_fk": {
-          "name": "aggregated_graph_versions_board_id_boards_id_fk",
-          "tableFrom": "aggregated_graph_versions",
+        "project_versions_related_id_boards_id_fk": {
+          "name": "project_versions_related_id_boards_id_fk",
+          "tableFrom": "project_versions",
           "tableTo": "boards",
           "columnsFrom": [
-            "board_id"
+            "related_id"
           ],
           "columnsTo": [
             "id"
@@ -512,8 +718,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "aggregated_graphs": {
-      "name": "aggregated_graphs",
+    "projects": {
+      "name": "projects",
       "columns": {
         "id": {
           "name": "id",
@@ -560,9 +766,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "aggregated_graphs_owner_id_users_id_fk": {
-          "name": "aggregated_graphs_owner_id_users_id_fk",
-          "tableFrom": "aggregated_graphs",
+        "projects_owner_id_users_id_fk": {
+          "name": "projects_owner_id_users_id_fk",
+          "tableFrom": "projects",
           "tableTo": "users",
           "columnsFrom": [
             "owner_id"
@@ -571,336 +777,6 @@
             "id"
           ],
           "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "aggregated_job_local_jobs": {
-      "name": "aggregated_job_local_jobs",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "aggregated_job_id": {
-          "name": "aggregated_job_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "local_job_id": {
-          "name": "local_job_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "aggregated_job_local_jobs_aggregated_job_id_aggregated_jobs_id_fk": {
-          "name": "aggregated_job_local_jobs_aggregated_job_id_aggregated_jobs_id_fk",
-          "tableFrom": "aggregated_job_local_jobs",
-          "tableTo": "aggregated_jobs",
-          "columnsFrom": [
-            "aggregated_job_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "aggregated_job_local_jobs_local_job_id_local_jobs_id_fk": {
-          "name": "aggregated_job_local_jobs_local_job_id_local_jobs_id_fk",
-          "tableFrom": "aggregated_job_local_jobs",
-          "tableTo": "local_jobs",
-          "columnsFrom": [
-            "local_job_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "aggregated_jobs": {
-      "name": "aggregated_jobs",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "aggregated_graph_version_id": {
-          "name": "aggregated_graph_version_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "parent_job_id": {
-          "name": "parent_job_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "data": {
-          "name": "data",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "aggregated_jobs_aggregated_graph_version_id_aggregated_graph_versions_id_fk": {
-          "name": "aggregated_jobs_aggregated_graph_version_id_aggregated_graph_versions_id_fk",
-          "tableFrom": "aggregated_jobs",
-          "tableTo": "aggregated_graph_versions",
-          "columnsFrom": [
-            "aggregated_graph_version_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "aggregated_jobs_parent_job_id_aggregated_jobs_id_fk": {
-          "name": "aggregated_jobs_parent_job_id_aggregated_jobs_id_fk",
-          "tableFrom": "aggregated_jobs",
-          "tableTo": "aggregated_jobs",
-          "columnsFrom": [
-            "parent_job_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "local_graphs": {
-      "name": "local_graphs",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "owner_id": {
-          "name": "owner_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "board_id": {
-          "name": "board_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "local_graphs_owner_id_users_id_fk": {
-          "name": "local_graphs_owner_id_users_id_fk",
-          "tableFrom": "local_graphs",
-          "tableTo": "users",
-          "columnsFrom": [
-            "owner_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "local_graphs_board_id_boards_id_fk": {
-          "name": "local_graphs_board_id_boards_id_fk",
-          "tableFrom": "local_graphs",
-          "tableTo": "boards",
-          "columnsFrom": [
-            "board_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "local_jobs": {
-      "name": "local_jobs",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "local_graph_id": {
-          "name": "local_graph_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "parent_job_id": {
-          "name": "parent_job_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "data": {
-          "name": "data",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "local_jobs_local_graph_id_local_graphs_id_fk": {
-          "name": "local_jobs_local_graph_id_local_graphs_id_fk",
-          "tableFrom": "local_jobs",
-          "tableTo": "local_graphs",
-          "columnsFrom": [
-            "local_graph_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "local_jobs_parent_job_id_local_jobs_id_fk": {
-          "name": "local_jobs_parent_job_id_local_jobs_id_fk",
-          "tableFrom": "local_jobs",
-          "tableTo": "local_jobs",
-          "columnsFrom": [
-            "parent_job_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },

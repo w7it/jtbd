@@ -4,16 +4,16 @@ import { timestamps } from "./helpers.ts";
 
 export enum NodeType {
   STICKY_NOTE = "STICKY_NOTE",
-  LOCAL_JOB = "LOCAL_JOB",
-  AGGREGATED_JOB = "AGGREGATED_JOB",
+  PROJECT_JOB = "PROJECT_JOB",
+  PROJECT_INTERVIEW_JOB = "PROJECT_INTERVIEW_JOB",
   DISCUSSION = "DISCUSSION",
 }
 
 const relatedTypeEnum = [
   NodeType.STICKY_NOTE,
   NodeType.DISCUSSION,
-  NodeType.LOCAL_JOB,
-  NodeType.AGGREGATED_JOB,
+  NodeType.PROJECT_JOB,
+  NodeType.PROJECT_INTERVIEW_JOB,
 ] as const;
 
 export const boards = sqliteTable("boards", {

@@ -1,25 +1,53 @@
-CREATE TABLE `aggregated_graph_local_graphs` (
+CREATE TABLE `project_interview_jobs` (
 	`id` text PRIMARY KEY NOT NULL,
-	`local_graph_id` text NOT NULL,
-	`aggregated_graph_version_id` text NOT NULL,
+	`project_interview_id` text NOT NULL,
+	`project_job_id` text,
+	`parent_job_id` text,
+	`name` text NOT NULL,
+	`data` text NOT NULL,
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL,
-	FOREIGN KEY (`local_graph_id`) REFERENCES `local_graphs`(`id`) ON UPDATE no action ON DELETE cascade,
-	FOREIGN KEY (`aggregated_graph_version_id`) REFERENCES `aggregated_graph_versions`(`id`) ON UPDATE no action ON DELETE cascade
+	FOREIGN KEY (`project_interview_id`) REFERENCES `project_interviews`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`project_job_id`) REFERENCES `project_jobs`(`id`) ON UPDATE no action ON DELETE set null,
+	FOREIGN KEY (`parent_job_id`) REFERENCES `project_interview_jobs`(`id`) ON UPDATE no action ON DELETE set null
 );
 --> statement-breakpoint
-CREATE TABLE `aggregated_graph_versions` (
+CREATE TABLE `project_interviews` (
 	`id` text PRIMARY KEY NOT NULL,
-	`aggregated_graph_id` text NOT NULL,
-	`board_id` text NOT NULL,
+	`project_version_id` text NOT NULL,
+	`related_id` text NOT NULL,
+	`title` text NOT NULL,
+	`description` text,
+	`created_at` integer NOT NULL,
+	`updated_at` integer NOT NULL,
+	FOREIGN KEY (`project_version_id`) REFERENCES `project_versions`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`related_id`) REFERENCES `boards`(`id`) ON UPDATE no action ON DELETE cascade
+);
+--> statement-breakpoint
+CREATE TABLE `project_jobs` (
+	`id` text PRIMARY KEY NOT NULL,
+	`project_version_id` text NOT NULL,
+	`parent_job_id` text,
+	`name` text NOT NULL,
+	`data` text NOT NULL,
+	`created_at` integer NOT NULL,
+	`updated_at` integer NOT NULL,
+	FOREIGN KEY (`project_version_id`) REFERENCES `project_versions`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`parent_job_id`) REFERENCES `project_jobs`(`id`) ON UPDATE no action ON DELETE set null
+);
+--> statement-breakpoint
+CREATE TABLE `project_versions` (
+	`id` text PRIMARY KEY NOT NULL,
+	`project_id` text NOT NULL,
+	`related_id` text NOT NULL,
 	`version` text NOT NULL,
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL,
-	FOREIGN KEY (`aggregated_graph_id`) REFERENCES `aggregated_graphs`(`id`) ON UPDATE no action ON DELETE cascade,
-	FOREIGN KEY (`board_id`) REFERENCES `boards`(`id`) ON UPDATE no action ON DELETE cascade
+	FOREIGN KEY (`project_id`) REFERENCES `projects`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`related_id`) REFERENCES `boards`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE TABLE `aggregated_graphs` (
+CREATE TABLE `projects` (
 	`id` text PRIMARY KEY NOT NULL,
 	`owner_id` text NOT NULL,
 	`title` text NOT NULL,
@@ -27,52 +55,6 @@ CREATE TABLE `aggregated_graphs` (
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL,
 	FOREIGN KEY (`owner_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade
-);
---> statement-breakpoint
-CREATE TABLE `aggregated_job_local_jobs` (
-	`id` text PRIMARY KEY NOT NULL,
-	`aggregated_job_id` text NOT NULL,
-	`local_job_id` text NOT NULL,
-	`created_at` integer NOT NULL,
-	`updated_at` integer NOT NULL,
-	FOREIGN KEY (`aggregated_job_id`) REFERENCES `aggregated_jobs`(`id`) ON UPDATE no action ON DELETE cascade,
-	FOREIGN KEY (`local_job_id`) REFERENCES `local_jobs`(`id`) ON UPDATE no action ON DELETE cascade
-);
---> statement-breakpoint
-CREATE TABLE `aggregated_jobs` (
-	`id` text PRIMARY KEY NOT NULL,
-	`aggregated_graph_version_id` text NOT NULL,
-	`parent_job_id` text,
-	`name` text NOT NULL,
-	`data` text NOT NULL,
-	`created_at` integer NOT NULL,
-	`updated_at` integer NOT NULL,
-	FOREIGN KEY (`aggregated_graph_version_id`) REFERENCES `aggregated_graph_versions`(`id`) ON UPDATE no action ON DELETE cascade,
-	FOREIGN KEY (`parent_job_id`) REFERENCES `aggregated_jobs`(`id`) ON UPDATE no action ON DELETE set null
-);
---> statement-breakpoint
-CREATE TABLE `local_graphs` (
-	`id` text PRIMARY KEY NOT NULL,
-	`owner_id` text NOT NULL,
-	`board_id` text NOT NULL,
-	`title` text NOT NULL,
-	`description` text,
-	`created_at` integer NOT NULL,
-	`updated_at` integer NOT NULL,
-	FOREIGN KEY (`owner_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade,
-	FOREIGN KEY (`board_id`) REFERENCES `boards`(`id`) ON UPDATE no action ON DELETE cascade
-);
---> statement-breakpoint
-CREATE TABLE `local_jobs` (
-	`id` text PRIMARY KEY NOT NULL,
-	`local_graph_id` text NOT NULL,
-	`parent_job_id` text,
-	`name` text NOT NULL,
-	`data` text NOT NULL,
-	`created_at` integer NOT NULL,
-	`updated_at` integer NOT NULL,
-	FOREIGN KEY (`local_graph_id`) REFERENCES `local_graphs`(`id`) ON UPDATE no action ON DELETE cascade,
-	FOREIGN KEY (`parent_job_id`) REFERENCES `local_jobs`(`id`) ON UPDATE no action ON DELETE set null
 );
 --> statement-breakpoint
 CREATE TABLE `board_discussion` (

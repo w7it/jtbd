@@ -4,28 +4,25 @@
 erDiagram
     users ||--o{ accounts : "userId"
     users ||--o{ sessions : "userId"
-    users ||--o{ local_graphs : "ownerId"
-    users ||--o{ aggregated_graphs : "ownerId"
+    users ||--o{ projects : "ownerId"
     users ||--o{ board_discussion : "topicStarterId"
     users ||--o{ board_discussion_replies : "authorId"
 
-    boards ||--o{ local_graphs : "boardId"
-    boards ||--o{ aggregated_graph_versions : "boardId"
+    projects ||--o{ project_versions : "projectId"
+
+    project_versions ||--o{ project_jobs : "projectVersionId"
+    project_versions ||--o{ project_interviews : "projectVersionId"
+    project_versions ||--|| boards : "relatedId"
+
+    project_jobs }o--o{ project_jobs : "parentJobId"
+    project_jobs ||--o{ project_interview_jobs : "projectJobId"
+
+    project_interviews ||--|| boards : "relatedId"
+    project_interviews ||--o{ project_interview_jobs : "projectInterviewId"
+
+    project_interview_jobs }o--o{ project_interview_jobs : "parentJobId"
+
     boards ||--o{ board_nodes : "boardId"
-
-    local_graphs ||--o{ local_jobs : "localGraphId"
-    local_graphs ||--o{ aggregated_graph_local_graphs : "localGraphId"
-
-    local_jobs }o--o{ local_jobs : "parentJobId"
-    local_jobs ||--o{ aggregated_job_local_jobs : "localJobId"
-
-    aggregated_graphs ||--o{ aggregated_graph_versions : "aggregatedGraphId"
-
-    aggregated_graph_versions ||--o{ aggregated_jobs : "aggregatedGraphVersionId"
-    aggregated_graph_versions ||--o{ aggregated_graph_local_graphs : "aggregatedGraphVersionId"
-
-    aggregated_jobs }o--o{ aggregated_jobs : "parentJobId"
-    aggregated_jobs ||--o{ aggregated_job_local_jobs : "aggregatedJobId"
 
     board_nodes ||--o| board_sticky_notes : "boardNodeId"
     board_nodes ||--o| board_discussion : "boardNodeId"
