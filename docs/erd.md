@@ -2,8 +2,8 @@
 
 ```mermaid
 erDiagram
-    users ||--o{ accounts : ""
-    users ||--o{ sessions : ""
+    users ||--o{ accounts : "userId"
+    users ||--o{ sessions : "userId"
     users ||--o{ local_graphs : "ownerId"
     users ||--o{ aggregated_graphs : "ownerId"
     users ||--o{ board_discussion : "topicStarterId"
@@ -11,26 +11,26 @@ erDiagram
 
     boards ||--o{ local_graphs : "boardId"
     boards ||--o{ aggregated_graph_versions : "boardId"
-    boards ||--o{ board_nodes : ""
+    boards ||--o{ board_nodes : "boardId"
 
-    local_graphs ||--o{ local_jobs : ""
-    local_graphs ||--o{ aggregated_graph_local_graphs : ""
+    local_graphs ||--o{ local_jobs : "localGraphId"
+    local_graphs ||--o{ aggregated_graph_local_graphs : "localGraphId"
 
-    local_jobs }o--o{ local_jobs : "parent/children"
-    local_jobs ||--o{ aggregated_job_local_jobs : ""
+    local_jobs }o--o{ local_jobs : "parentJobId"
+    local_jobs ||--o{ aggregated_job_local_jobs : "localJobId"
 
-    aggregated_graphs ||--o{ aggregated_graph_versions : ""
-    aggregated_graphs ||--o{ aggregated_graph_local_graphs : ""
+    aggregated_graphs ||--o{ aggregated_graph_versions : "aggregatedGraphId"
 
-    aggregated_graph_versions ||--o{ aggregated_jobs : ""
+    aggregated_graph_versions ||--o{ aggregated_jobs : "aggregatedGraphVersionId"
+    aggregated_graph_versions ||--o{ aggregated_graph_local_graphs : "aggregatedGraphVersionId"
 
-    aggregated_jobs }o--o{ aggregated_jobs : "parent/children"
-    aggregated_jobs ||--o{ aggregated_job_local_jobs : ""
+    aggregated_jobs }o--o{ aggregated_jobs : "parentJobId"
+    aggregated_jobs ||--o{ aggregated_job_local_jobs : "aggregatedJobId"
 
-    board_nodes ||--o| board_sticky_notes : ""
-    board_nodes ||--o| board_discussion : ""
+    board_nodes ||--o| board_sticky_notes : "boardNodeId"
+    board_nodes ||--o| board_discussion : "boardNodeId"
 
-    board_discussion ||--o{ board_discussion_replies : ""
+    board_discussion ||--o{ board_discussion_replies : "discussionId"
 
     verifications
 ```
