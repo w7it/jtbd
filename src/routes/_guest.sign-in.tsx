@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -14,39 +14,31 @@ import {
   FormMessage,
 } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import { Link } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/sign-up")({
-  component: SignUpPage,
-  loader: async () => {
-    const { data } = await authClient.getSession();
-    if (data?.user) {
-      throw redirect({ to: "/" });
-    }
-  },
+export const Route = createFileRoute("/_guest/sign-in")({
+  component: SignInPage,
 });
 
 const formSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters").max(50),
-  email: z.string().email("Invalid email address").min(2).max(50),
-  password: z.string().min(8, "Password must be at least 8 characters").max(50),
+  email: z.string().email().min(2).max(50),
+  password: z.string().min(8).max(50),
 });
 
-function SignUpPage() {
+function SignInPage() {
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-xs">
         <div className="mb-6 text-center">
-          <h1 className="text-2xl font-semibold">Sign Up</h1>
+          <h1 className="text-2xl font-semibold">Sign In</h1>
           <p className="text-sm text-muted-foreground mt-2">
-            Create your account to get started
+            Welcome back! Please sign in to your account
           </p>
         </div>
         <EmailPasswordForm />
         <div className="mt-4 text-center text-sm">
-          Already have an account?{" "}
-          <Link to="/sign-in" className="text-primary hover:underline">
-            Sign in
+          Don't have an account?{" "}
+          <Link to="/sign-up" className="text-primary hover:underline">
+            Sign up
           </Link>
         </div>
       </div>
@@ -59,7 +51,6 @@ function EmailPasswordForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
       email: "",
       password: "",
     },
@@ -71,23 +62,16 @@ function EmailPasswordForm() {
       form.clearErrors();
 
       try {
-        const { error } = await authClient.signUp.email({
+        const { error } = await authClient.signIn.email({
           email: values.email,
           password: values.password,
-          name: values.name,
           callbackURL: "/",
         });
 
         if (error) {
-          if (error.message?.includes("email")) {
-            form.setError("email", {
-              message: error.message,
-            });
-          } else {
-            form.setError("password", {
-              message: error.message,
-            });
-          }
+          form.setError("password", {
+            message: error?.message,
+          });
         }
       } finally {
         setIsPending(false);
@@ -104,30 +88,12 @@ function EmailPasswordForm() {
       >
         <FormField
           control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Your full name"
-                  data-testid="name-input"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
               <FormLabel>E-Mail</FormLabel>
               <FormControl>
                 <Input
-                  type="email"
                   placeholder="your@email.com"
                   data-testid="email-input"
                   {...field}
@@ -146,7 +112,6 @@ function EmailPasswordForm() {
               <FormControl>
                 <Input
                   type="password"
-                  placeholder="At least 8 characters"
                   data-testid="password-input"
                   {...field}
                 />
@@ -157,7 +122,7 @@ function EmailPasswordForm() {
         />
 
         <Button type="submit" data-testid="submit-button" disabled={isPending}>
-          {isPending ? "Creating account..." : "Sign Up"}
+          {isPending ? "Submitting..." : "Submit"}
         </Button>
       </form>
     </Form>
