@@ -134,3 +134,10 @@ Jobs are connected using this methodology:
 - For generating database migrations, use the command: `npx drizzle-kit generate --name=some_miggration_name`
   - Replace `some_miggration_name` with a meaningful name that describes the database schema changes
   - Check the database schema changes in `@src/server/db/schemes/` to create descriptive migration names
+
+## Task Management
+
+- **TODO.md**: Use the `@TODO.md` file in the project root to track remaining project tasks
+  - Add new tasks as they are identified during development
+  - Remove completed tasks immediately after completion
+  - Keep descriptions clear and actionable

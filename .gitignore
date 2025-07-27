@@ -5,6 +5,7 @@ node_modules/
 .nitro/
 .env
 *.db
+TODO.md
 
 # Playwright
 /test-results/
