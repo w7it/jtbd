@@ -1,6 +1,28 @@
 import { Button } from "@/components/ui/button";
 import { EditorTool } from "../constants/boards";
 import { MousePointer2, StickyNote, Goal } from "lucide-react";
+import { useEffect } from "react";
+
+const tools = [
+  {
+    id: EditorTool.CURSOR,
+    icon: MousePointer2,
+    label: "Cursor",
+    shortcut: { code: "KeyC" },
+  },
+  {
+    id: EditorTool.ADD_NOTE,
+    icon: StickyNote,
+    label: "Add sticky note",
+    shortcut: { code: "KeyS" },
+  },
+  {
+    id: EditorTool.ADD_JOB,
+    icon: Goal,
+    label: "Add job",
+    shortcut: { code: "KeyJ" },
+  },
+];
 
 interface EditorToolbarProps {
   activeTool: EditorTool;
@@ -11,23 +33,20 @@ export function EditorToolbar({
   activeTool,
   onToolChange,
 }: EditorToolbarProps) {
-  const tools = [
-    {
-      id: EditorTool.CURSOR,
-      icon: MousePointer2,
-      label: "Cursor",
-    },
-    {
-      id: EditorTool.ADD_NOTE,
-      icon: StickyNote,
-      label: "Add sticky note",
-    },
-    {
-      id: EditorTool.ADD_JOB,
-      icon: Goal,
-      label: "Add job",
-    },
-  ];
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const tool = tools.find((tool) => tool.shortcut.code === event.code);
+      if (tool) {
+        onToolChange(tool.id);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown, false);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown, false);
+    };
+  }, []);
 
   return (
     <div className="pointer-events-auto bg-background border rounded-lg shadow-lg p-1 flex gap-1">

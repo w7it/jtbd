@@ -10,76 +10,65 @@ import {
   Background,
   BackgroundVariant,
   ConnectionMode,
+  useReactFlow,
+  ReactFlowProvider,
 } from "@xyflow/react";
 import "@xyflow/react/dist/base.css";
 import { COMPONENTS_BY_TYPE } from "./node.ts";
 import { Overlay } from "./Overlay.tsx";
-import { EditorTool } from "../constants/boards.ts";
+import { EditorTool, NodeType } from "../constants/boards.ts";
 import "./editor.css";
 import { cn } from "@/lib/utils.ts";
+import { nanoid } from "nanoid";
 
 type EditorProps = {
   readonly nodes: readonly Node[];
   readonly edges: readonly Edge[];
 };
 
-export function Editor({
+function EditorInternal({
   nodes: initialNodes,
   edges: initialEdges,
 }: EditorProps) {
-  const [nodes, _setNodes, onNodesChange] = useNodesState(initialNodes.slice());
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes.slice());
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges.slice());
   const [activeTool, setActiveTool] = useState<EditorTool>(EditorTool.CURSOR);
-  // const [nodeId, setNodeId] = useState(3);
+  const { screenToFlowPosition } = useReactFlow();
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges],
   );
 
-  // const onPaneDoubleClick = useCallback(
-  //   (event: React.MouseEvent) => {
-  //     const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
-  //     const position = {
-  //       x: event.clientX - rect.left - 100,
-  //       y: event.clientY - rect.top - 50,
-  //     };
+  const onPaneClick = useCallback(
+    (event: React.MouseEvent) => {
+      const clickPosition = { x: event.clientX, y: event.clientY };
+      const position = screenToFlowPosition(clickPosition);
 
-  //     const newNode: Node = {
-  //       id: `${nodeId}`,
-  //       type: NodeType.STICKY_NOTE,
-  //       position,
-  //       data: { content: "" },
-  //     };
+      setActiveTool(EditorTool.CURSOR);
 
-  //     setNodes((nds) => [...nds, newNode]);
-  //     setNodeId((id) => id + 1);
-  //   },
-  //   [nodeId, setNodes],
-  // );
+      if (activeTool === EditorTool.ADD_NOTE) {
+        const newNode: Node = {
+          id: nanoid(),
+          type: NodeType.STICKY_NOTE,
+          position,
+          data: {},
+        };
 
-  // const onNodeDelete = useCallback(
-  //   (nodeId: string) => {
-  //     setNodes((nds) => nds.filter((node) => node.id !== nodeId));
-  //     setEdges((eds) =>
-  //       eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId),
-  //     );
-  //   },
-  //   [setNodes, setEdges],
-  // );
+        setNodes((nodes) => [...nodes, newNode]);
+      } else if (activeTool === EditorTool.ADD_JOB) {
+        const newNode: Node = {
+          id: nanoid(),
+          type: NodeType.PROJECT_JOB,
+          position,
+          data: {},
+        };
 
-  // const onNodeContentChange = useCallback(
-  //   (nodeId: string, content: string) => {
-  //     setNodes((nds) =>
-  //       nds.map((node) =>
-  //         node.id === nodeId
-  //           ? { ...node, data: { ...node.data, content } }
-  //           : node,
-  //       ),
-  //     );
-  //   },
-  //   [setNodes],
-  // );
+        setNodes((nodes) => [...nodes, newNode]);
+      }
+    },
+    [activeTool, setNodes, setActiveTool, screenToFlowPosition],
+  );
 
   return (
     <div
@@ -96,6 +85,7 @@ export function Editor({
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onPaneClick={onPaneClick}
         nodeTypes={COMPONENTS_BY_TYPE}
         attributionPosition="bottom-left"
         proOptions={{ hideAttribution: true }}
@@ -106,5 +96,13 @@ export function Editor({
 
       <Overlay activeTool={activeTool} setActiveTool={setActiveTool} />
     </div>
+  );
+}
+
+export function Editor(props: EditorProps) {
+  return (
+    <ReactFlowProvider>
+      <EditorInternal {...props} />
+    </ReactFlowProvider>
   );
 }
