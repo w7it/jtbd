@@ -1,6 +1,21 @@
 import { sql } from "drizzle-orm";
 import { db } from "../db.ts";
-import { projects } from "./schema.ts";
+import { projects, settings } from "./schema.ts";
+
+export const writeInstallSettings = db
+  .insert(settings)
+  .values([
+    { name: "installation_id", value: sql.placeholder("installationId") },
+    { name: "admin_email", value: sql.placeholder("adminEmail") },
+  ])
+  .prepare();
+
+export const getAdminEmail = db.query.settings
+  .findFirst({
+    columns: { value: true },
+    where: (settings, { eq }) => eq(settings.name, "admin_email"),
+  })
+  .prepare();
 
 export const getProjectsByUserId = db.query.projects
   .findMany({
