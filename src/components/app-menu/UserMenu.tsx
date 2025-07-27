@@ -12,14 +12,14 @@ export function UserMenu() {
 
   if (session.data?.user) {
     return (
-      <Button size="icon" variant="secondary">
+      <Button size="icon" variant="ghost">
         <User2 />
       </Button>
     );
   }
 
   return (
-    <Button size="icon" variant="secondary" asChild>
+    <Button size="icon" variant="ghost" asChild>
       <Link to="/sign-in">
         <User2 />
       </Link>

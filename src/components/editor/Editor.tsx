@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import {
   ReactFlow,
   Node,
@@ -11,9 +11,12 @@ import {
   BackgroundVariant,
   ConnectionMode,
 } from "@xyflow/react";
-import "@xyflow/react/dist/style.css";
+import "@xyflow/react/dist/base.css";
 import { COMPONENTS_BY_TYPE } from "./node.ts";
 import { Overlay } from "./Overlay.tsx";
+import { EditorTool } from "../constants/boards.ts";
+import "./editor.css";
+import { cn } from "@/lib/utils.ts";
 
 type EditorProps = {
   readonly nodes: readonly Node[];
@@ -26,6 +29,7 @@ export function Editor({
 }: EditorProps) {
   const [nodes, _setNodes, onNodesChange] = useNodesState(initialNodes.slice());
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges.slice());
+  const [activeTool, setActiveTool] = useState<EditorTool>(EditorTool.CURSOR);
   // const [nodeId, setNodeId] = useState(3);
 
   const onConnect = useCallback(
@@ -78,7 +82,14 @@ export function Editor({
   // );
 
   return (
-    <div className="h-screen w-full relative">
+    <div
+      className={cn("h-screen w-full relative", {
+        "cursor-grab": activeTool === EditorTool.CURSOR,
+        "cursor-copy":
+          activeTool === EditorTool.ADD_JOB ||
+          activeTool === EditorTool.ADD_NOTE,
+      })}
+    >
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -93,7 +104,7 @@ export function Editor({
         <Background variant={BackgroundVariant.Dots} gap={20} size={1} />
       </ReactFlow>
 
-      <Overlay />
+      <Overlay activeTool={activeTool} setActiveTool={setActiveTool} />
     </div>
   );
 }

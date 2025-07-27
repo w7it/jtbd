@@ -20,7 +20,7 @@ export function ProjectSwitcher() {
 
   if (!session.data?.user) {
     return (
-      <Button variant="secondary" className="!cursor-default">
+      <Button variant="ghost" className="!cursor-default" disabled>
         Demo project
       </Button>
     );

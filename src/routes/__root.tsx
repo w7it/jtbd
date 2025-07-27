@@ -54,8 +54,13 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       </head>
       <body>
         {children}
-        <TanStackRouterDevtools position="bottom-right" />
-        <ReactQueryDevtools buttonPosition="bottom-left" />
+
+        {import.meta.env.DEV && (
+          <TanStackRouterDevtools position="bottom-right" />
+        )}
+        {import.meta.env.DEV && (
+          <ReactQueryDevtools buttonPosition="bottom-left" />
+        )}
         <Scripts />
       </body>
     </html>

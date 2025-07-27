@@ -9,3 +9,9 @@ export enum NodeType {
   PROJECT_INTERVIEW_JOB = "PROJECT_INTERVIEW_JOB",
   DISCUSSION = "DISCUSSION",
 }
+
+export enum EditorTool {
+  CURSOR = "CURSOR",
+  ADD_NOTE = "ADD_NOTE",
+  ADD_JOB = "ADD_JOB",
+}
