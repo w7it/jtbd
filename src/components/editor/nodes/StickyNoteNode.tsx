@@ -1,61 +1,55 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { Position, NodeProps } from "@xyflow/react";
 import { NodeHandle } from "../components/NodeHandle.tsx";
 import { NodeDeleteButton } from "../components/NodeDeleteButton.tsx";
 import { cn } from "@/lib/utils.ts";
 
-interface StickyNoteData {
-  content?: string;
-}
+export type StickyNoteData = {
+  readonly size?: "xs" | "sm" | "md" | "lg" | "xl";
+  readonly content?: string;
+};
 
-export const StickyNoteNode = React.memo(({ data, id }: NodeProps) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [content, _setContent] = useState(
-    (data as StickyNoteData)?.content || "",
-  );
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    if (isEditing && textareaRef.current) {
-      textareaRef.current.focus();
-      textareaRef.current.select();
-    }
-  }, [isEditing]);
-
-  const handleFocus = () => {
-    setIsEditing(true);
-  };
-
-  const handleBlur = () => {
-    setIsEditing(false);
-
-    window.getSelection()?.removeAllRanges();
-  };
+export const StickyNoteNode = React.memo(({ data: rawData, id }: NodeProps) => {
+  const data = rawData as StickyNoteData;
+  const { size = "xs", content: initialContent = "" } = data;
+  const [content, _setContent] = useState(initialContent);
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // Here you would typically call a callback to delete the node
-    // For now, we'll just log it
-    console.log(`Delete node ${id}`);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    event.stopPropagation();
   };
 
   return (
     <div
       className={cn("sticky-note-node group relative", {
-        nodrag: isEditing,
+        "w-24 h-24 text-xs": size === "xs",
+        "w-32 h-32 text-xs": size === "sm",
+        "w-64 h-64 text-md": size === "md",
+        "w-96 h-96 text-lg": size === "lg",
+        "w-128 h-128 text-xl": size === "xl",
       })}
+      onKeyDown={handleKeyDown}
     >
-      <div className="bg-yellow-100 border-1 border-yellow-200 rounded-sm shadow-md hover:shadow-lg transition-shadow cursor-move">
+      <div className="bg-yellow-100 border-1 border-yellow-200 rounded-sm shadow-md hover:shadow-lg transition-shadow cursor-move h-full w-full">
         <NodeDeleteButton onClick={handleDelete} />
-        <div
-          className="p-4 w-full h-full text-sm font-medium text-gray-800 whitespace-pre-wrap break-words min-h-[60px] cursor-text outline-none resize-none"
+        <textarea
+          className={cn(
+            "p-4 w-full h-full text-gray-800 whitespace-pre-wrap break-words cursor-text outline-none resize-none",
+            {
+              "p-2": size === "xs",
+              "p-4": size === "sm",
+              "p-6": size === "md",
+              "p-8": size === "lg",
+              "p-10": size === "xl",
+            },
+          )}
           style={{ wordBreak: "break-word" }}
-          contentEditable
-          onFocus={handleFocus}
-          onBlur={handleBlur}
         >
-          {content || "Double-click to edit"}
-        </div>
+          {content}
+        </textarea>
       </div>
 
       <NodeHandle type="source" id="left-in" position={Position.Left} />
