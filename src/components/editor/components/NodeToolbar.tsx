@@ -23,8 +23,16 @@ export function NodeToolbar({ onDelete }: NodeToolbarProps) {
 
   return (
     <ReactFlow.NodeToolbar position={ReactFlow.Position.Bottom}>
-      <div className="bg-white bg-background border rounded-lg shadow-lg p-1 flex gap-1">
-        {buttons}
+      <div className="relative">
+        <div
+          className="absolute -top-1 left-1/2 -translate-x-1/2"
+          aria-hidden="true"
+        >
+          <div className="w-2 h-2 bg-white bg-background border border-b-0 border-r-0 rotate-45 shadow-lg" />
+        </div>
+        <div className="bg-white bg-background border rounded-lg shadow-lg p-1 flex gap-1">
+          {buttons}
+        </div>
       </div>
     </ReactFlow.NodeToolbar>
   );
