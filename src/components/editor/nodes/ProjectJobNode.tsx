@@ -3,13 +3,13 @@ import { NodeProps } from "@xyflow/react";
 import { cn } from "@/lib/utils.ts";
 import { NodeToolbar } from "../components/NodeToolbar.tsx";
 
-export type ProjectData = {
+export type ProjectJobData = {
   readonly content?: string;
 };
 
-export const ProjectNode = React.memo(
+export const ProjectJobNode = React.memo(
   ({ data: rawData, selected }: NodeProps) => {
-    const data = rawData as ProjectData;
+    const data = rawData as ProjectJobData;
 
     const handleDelete = () => {
       console.log("delete");
