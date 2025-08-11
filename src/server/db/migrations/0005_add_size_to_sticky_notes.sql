@@ -1,0 +1,1 @@
+ALTER TABLE `board_sticky_notes` ADD `size` text;

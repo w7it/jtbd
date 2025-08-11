@@ -1,19 +1,23 @@
-import { Node, Edge } from "@xyflow/react";
+import { Edge } from "@xyflow/react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { authClient } from "@/lib/authClient.ts";
-import { NodeType } from "@/components/constants/boards";
+import { BoardNode } from "@/constants/boards";
 import { getBoardDataById } from "@/server/functions/boards";
+import { BoardId } from "@/lib/genId.ts";
+import {
+  genEmptyStickyNoteData,
+  genEmptyStickyNoteNode,
+} from "@/lib/boards.ts";
 
-export function useBoardData(boardId: string | null) {
+export type BoardData = {
+  readonly nodes: readonly BoardNode[];
+  readonly edges: readonly Edge[];
+};
+
+export function useBoardData(boardId: BoardId | null): BoardData | null {
   const session = authClient.useSession();
-
-  const getBoardDataByIdFn = useServerFn(getBoardDataById);
-  const { data: realBoardData } = useQuery({
-    queryKey: ["board", boardId],
-    queryFn: () => (boardId ? getBoardDataByIdFn({ data: { boardId } }) : null),
-    enabled: !!session.data?.user && !!boardId,
-  });
+  const realBoardData = useRealBoardData(boardId);
 
   if (session.isPending) {
     return null;
@@ -26,22 +30,35 @@ export function useBoardData(boardId: string | null) {
   return realBoardData;
 }
 
-const demoNodes: readonly Node[] = Object.freeze([
+const useRealBoardData = (boardId: BoardId | null) => {
+  const session = authClient.useSession();
+
+  const getBoardDataByIdFn = useServerFn(getBoardDataById);
+  const { data: realBoardData } = useQuery({
+    queryKey: ["board", boardId],
+    queryFn: () => (boardId ? getBoardDataByIdFn({ data: { boardId } }) : null),
+    enabled: !!session.data?.user && !!boardId,
+  });
+
+  return realBoardData as {
+    nodes: readonly BoardNode[];
+    edges: readonly Edge[];
+  } | null;
+};
+
+const demoNodes: readonly BoardNode[] = Object.freeze([
   Object.freeze({
-    id: "1",
-    type: NodeType.STICKY_NOTE,
+    ...genEmptyStickyNoteNode(),
     position: { x: 100, y: 100 },
-    width: 100,
-    height: 100,
-    data: { content: "Welcome to JTBD Builder!" },
+    data: { ...genEmptyStickyNoteData(), content: "Welcome to JTBD Builder!" },
   }),
   Object.freeze({
-    id: "2",
-    type: NodeType.STICKY_NOTE,
+    ...genEmptyStickyNoteNode(),
     position: { x: 400, y: 150 },
-    width: 100,
-    height: 100,
-    data: { content: "Double-click anywhere to create a new note" },
+    data: {
+      ...genEmptyStickyNoteData(),
+      content: "Double-click anywhere to create a new note",
+    },
   }),
 ]);
 

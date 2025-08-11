@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { useProjects } from "@/hooks/useProjects.ts";
+import { ProjectId } from "@/lib/genId.ts";
 
 export function ProjectSwitcher() {
   const session = authClient.useSession();
@@ -53,7 +54,7 @@ function ProjectSwitcherForUser() {
 }
 
 type ProjectListProps = {
-  setCurrentProjectId: (id: string) => void;
+  setCurrentProjectId: (id: ProjectId) => void;
 };
 
 function ProjectList({ setCurrentProjectId }: ProjectListProps) {

@@ -5,7 +5,7 @@ import { admin } from "better-auth/plugins";
 import { APIError, createAuthMiddleware } from "better-auth/api";
 import { db } from "./db.ts";
 import { getWebRequest } from "@tanstack/react-start/server";
-import { nanoid } from "nanoid";
+import { genUserId, genInstallationId, UserId } from "@/lib/genId.ts";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -18,6 +18,9 @@ export const auth = betterAuth({
   },
   advanced: {
     cookiePrefix: "jtbd",
+    database: {
+      generateId: () => genUserId(),
+    },
   },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
@@ -34,7 +37,7 @@ export const auth = betterAuth({
 
       // Run installation for first sign up
       if (isSignUp && !adminEmail) {
-        const installationId = nanoid();
+        const installationId = genInstallationId();
         await writeInstallSettings.execute({
           installationId,
           adminEmail: email,
@@ -58,5 +61,5 @@ export const getSession = () => {
 
 export const getUserId = async () => {
   const session = await getSession();
-  return session?.user.id;
+  return session?.user.id as UserId | undefined;
 };

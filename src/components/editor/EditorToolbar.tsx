@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { EditorTool } from "../constants/boards";
+import { EditorTool } from "../../constants/boards";
 import { MousePointer2, StickyNote, Goal } from "lucide-react";
 import { useEffect } from "react";
 
@@ -49,7 +49,7 @@ export function EditorToolbar({
   }, []);
 
   return (
-    <div className="pointer-events-auto bg-background border rounded-lg shadow-lg p-1 flex gap-1">
+    <div className="pointer-events-auto cursor-default bg-background border rounded-lg shadow-lg p-1 flex gap-1">
       {tools.map((tool) => {
         const Icon = tool.icon;
         return (

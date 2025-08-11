@@ -1,14 +1,26 @@
-import { randomUUID } from "node:crypto";
 import { AnySQLiteColumn, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { users } from "./auth.ts";
 import { timestamps } from "./helpers.ts";
 import { boards } from "./boards.ts";
 import { relations } from "drizzle-orm";
+import {
+  genProjectId,
+  genProjectVersionId,
+  genProjectJobId,
+  genProjectInterviewId,
+  ProjectId,
+  ProjectJobId,
+  ProjectInterviewId,
+  ProjectVersionId,
+  ProjectInterviewJobId,
+  genProjectInterviewJobId,
+} from "@/lib/genId.ts";
 
 export const projects = sqliteTable("projects", {
   id: text("id")
     .primaryKey()
-    .$defaultFn(() => randomUUID()),
+    .$type<ProjectId>()
+    .$defaultFn(() => genProjectId()),
   ownerId: text("owner_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
@@ -33,7 +45,8 @@ export const projectsRelations = relations(projects, ({ one }) => ({
 export const projectVersions = sqliteTable("project_versions", {
   id: text("id")
     .primaryKey()
-    .$defaultFn(() => randomUUID()),
+    .$type<ProjectVersionId>()
+    .$defaultFn(() => genProjectVersionId()),
   projectId: text("project_id")
     .notNull()
     .references((): AnySQLiteColumn => projects.id, { onDelete: "cascade" }),
@@ -60,7 +73,8 @@ export const projectVersionsRelations = relations(
 export const projectJobs = sqliteTable("project_jobs", {
   id: text("id")
     .primaryKey()
-    .$defaultFn(() => randomUUID()),
+    .$type<ProjectJobId>()
+    .$defaultFn(() => genProjectJobId()),
   projectVersionId: text("project_version_id")
     .notNull()
     .references(() => projectVersions.id, { onDelete: "cascade" }),
@@ -70,7 +84,12 @@ export const projectJobs = sqliteTable("project_jobs", {
   ),
 
   name: text("name").notNull(),
-  data: text("data", { mode: "json" }).notNull(),
+  data: text("data", { mode: "json" })
+    .notNull()
+    .$type<{
+      readonly job?: string;
+    }>()
+    .$defaultFn(() => ({})),
 
   ...timestamps(),
 });
@@ -78,7 +97,8 @@ export const projectJobs = sqliteTable("project_jobs", {
 export const projectInterviews = sqliteTable("project_interviews", {
   id: text("id")
     .primaryKey()
-    .$defaultFn(() => randomUUID()),
+    .$type<ProjectInterviewId>()
+    .$defaultFn(() => genProjectInterviewId()),
   projectVersionId: text("project_version_id")
     .notNull()
     .references(() => projectVersions.id, { onDelete: "cascade" }),
@@ -95,7 +115,8 @@ export const projectInterviews = sqliteTable("project_interviews", {
 export const projectInterviewJobs = sqliteTable("project_interview_jobs", {
   id: text("id")
     .primaryKey()
-    .$defaultFn(() => randomUUID()),
+    .$type<ProjectInterviewJobId>()
+    .$defaultFn(() => genProjectInterviewJobId()),
   projectInterviewId: text("project_interview_id")
     .notNull()
     .references(() => projectInterviews.id, { onDelete: "cascade" }),
@@ -108,7 +129,12 @@ export const projectInterviewJobs = sqliteTable("project_interview_jobs", {
   ),
 
   name: text("name").notNull(),
-  data: text("data", { mode: "json" }).notNull(),
+  data: text("data", { mode: "json" })
+    .notNull()
+    .$type<{
+      readonly job?: string;
+    }>()
+    .$defaultFn(() => ({})),
 
   ...timestamps(),
 });

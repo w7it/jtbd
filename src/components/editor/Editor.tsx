@@ -1,44 +1,40 @@
 import { useCallback, useState } from "react";
 import {
   ReactFlow,
-  Node,
   Edge,
-  addEdge,
+  Node,
   Connection,
-  useNodesState,
-  useEdgesState,
   Background,
   BackgroundVariant,
   ConnectionMode,
   useReactFlow,
   ReactFlowProvider,
+  NodeChange,
+  EdgeChange,
 } from "@xyflow/react";
 import "@xyflow/react/dist/base.css";
 import { COMPONENTS_BY_TYPE } from "./node.ts";
 import { Overlay } from "./Overlay.tsx";
-import { EditorTool, NodeType } from "../constants/boards.ts";
+import { BoardNode, EditorTool } from "../../constants/boards.ts";
 import "./editor.css";
 import { cn } from "@/lib/utils.ts";
-import { nanoid } from "nanoid";
+import {
+  genEmptyProjectJobNode,
+  genEmptyStickyNoteNode,
+} from "@/lib/boards.ts";
 
 type EditorProps = {
-  readonly nodes: readonly Node[];
+  readonly children: React.ReactNode;
+  readonly nodes: readonly Node<BoardNode["data"]>[];
   readonly edges: readonly Edge[];
+  readonly onConnect?: (params: Connection) => void;
+  readonly onNodesChange?: (changes: NodeChange<BoardNode>[]) => void;
+  readonly onEdgesChange?: (changes: EdgeChange[]) => void;
 };
 
-function EditorInternal({
-  nodes: initialNodes,
-  edges: initialEdges,
-}: EditorProps) {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes.slice());
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges.slice());
+function EditorInternal(props: EditorProps) {
   const [activeTool, setActiveTool] = useState<EditorTool>(EditorTool.CURSOR);
   const { screenToFlowPosition } = useReactFlow();
-
-  const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges],
-  );
 
   const onPaneClick = useCallback(
     (event: React.MouseEvent) => {
@@ -48,26 +44,14 @@ function EditorInternal({
       setActiveTool(EditorTool.CURSOR);
 
       if (activeTool === EditorTool.ADD_NOTE) {
-        const newNode: Node = {
-          id: nanoid(),
-          type: NodeType.STICKY_NOTE,
-          position,
-          data: {},
-        };
-
-        setNodes((nodes) => [...nodes, newNode]);
+        const item: BoardNode = { ...genEmptyStickyNoteNode(), position };
+        props.onNodesChange?.([{ item, type: "add" }]);
       } else if (activeTool === EditorTool.ADD_JOB) {
-        const newNode: Node = {
-          id: nanoid(),
-          type: NodeType.PROJECT_JOB,
-          position,
-          data: {},
-        };
-
-        setNodes((nodes) => [...nodes, newNode]);
+        const item: BoardNode = { ...genEmptyProjectJobNode(), position };
+        props.onNodesChange?.([{ item, type: "add" }]);
       }
     },
-    [activeTool, setNodes, setActiveTool, screenToFlowPosition],
+    [activeTool, props.onNodesChange, setActiveTool, screenToFlowPosition],
   );
 
   return (
@@ -80,11 +64,11 @@ function EditorInternal({
       })}
     >
       <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
+        nodes={props.nodes as BoardNode[]}
+        edges={props.edges as Edge[]}
+        onNodesChange={props.onNodesChange}
+        onEdgesChange={props.onEdgesChange}
+        onConnect={props.onConnect}
         onPaneClick={onPaneClick}
         nodeTypes={COMPONENTS_BY_TYPE}
         attributionPosition="bottom-left"
@@ -94,7 +78,9 @@ function EditorInternal({
         <Background variant={BackgroundVariant.Dots} gap={20} size={1} />
       </ReactFlow>
 
-      <Overlay activeTool={activeTool} setActiveTool={setActiveTool} />
+      <Overlay activeTool={activeTool} setActiveTool={setActiveTool}>
+        {props.children}
+      </Overlay>
     </div>
   );
 }

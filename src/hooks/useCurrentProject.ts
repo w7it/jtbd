@@ -4,12 +4,13 @@ import { getProjectById, getProjects } from "@/server/functions/projects";
 import { useEffect } from "react";
 import { authClient } from "@/lib/authClient.ts";
 import { useLocalStorage } from "./useLocalStorage.ts";
+import { BoardId, ProjectId } from "@/lib/genId.ts";
 
 type Project = {
-  readonly id: string;
+  readonly id: ProjectId;
   readonly title: string;
   readonly description: string | null;
-  readonly boardId: string | null;
+  readonly boardId: BoardId | null;
 };
 
 const CURRENT_PROJECT_QUERY_KEY = "currentProject";

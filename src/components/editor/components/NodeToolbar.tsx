@@ -11,7 +11,13 @@ export function NodeToolbar({ onDelete }: NodeToolbarProps) {
 
   if (onDelete) {
     buttons.push(
-      <Button size="icon" variant="ghost" onClick={onDelete} className="group">
+      <Button
+        key="delete"
+        size="icon"
+        variant="ghost"
+        onClick={onDelete}
+        className="group"
+      >
         <Trash2Icon className="transition group-hover:text-red-600" />
       </Button>,
     );

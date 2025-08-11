@@ -1,14 +1,15 @@
+import { BoardId, ProjectId } from "@/lib/genId.ts";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 type ShortProject = {
-  readonly id: string;
+  readonly id: ProjectId;
   readonly title: string;
   readonly description: string | null;
 };
 
 type FullProject = ShortProject & {
-  readonly boardId: string | null;
+  readonly boardId: BoardId | null;
 };
 
 export const getProjects = createServerFn().handler(
@@ -24,7 +25,7 @@ export const getProjects = createServerFn().handler(
     let result = await getProjectsByUserId.execute({ userId });
 
     if (result.length === 0) {
-      await createEmptyProject.execute({ userId });
+      await createEmptyProject({ userId });
       result = await getProjectsByUserId.execute({ userId });
     }
 
@@ -55,6 +56,6 @@ export const getProjectById = createServerFn()
       id: result.id,
       title: result.title,
       description: result.description,
-      boardId: result.lastVersion?.boardId ?? null,
+      boardId: (result.lastVersion?.boardId ?? null) as BoardId | null,
     };
   });

@@ -1,26 +1,30 @@
-import React, { useState } from "react";
-import { NodeProps } from "@xyflow/react";
+import React, { useCallback } from "react";
+import { Node, NodeProps, useReactFlow } from "@xyflow/react";
+import { BoardNode, StickyNoteData } from "@/constants/boards.ts";
 import { cn } from "@/lib/utils.ts";
 import { NodeToolbar } from "../components/NodeToolbar.tsx";
 
-export type StickyNoteData = {
-  readonly size?: "xs" | "sm" | "md" | "lg" | "xl";
-  readonly content?: string;
-};
-
 export const StickyNoteNode = React.memo(
-  ({ data: rawData, selected }: NodeProps) => {
+  ({ id, data: rawData, selected }: NodeProps<Node<BoardNode["data"]>>) => {
     const data = rawData as StickyNoteData;
-    const { size = "xs", content: initialContent = "" } = data;
-    const [content, _setContent] = useState(initialContent);
+    const { size = "xs", content } = data;
+    const reactFlow = useReactFlow();
 
-    const handleKeyDown = (event: React.KeyboardEvent) => {
+    const handleChange = useCallback(
+      (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const newContent = event.target.value;
+        reactFlow.updateNodeData(id, { content: newContent });
+      },
+      [id, reactFlow],
+    );
+
+    const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
       event.stopPropagation();
-    };
+    }, []);
 
-    const handleDelete = () => {
-      console.log("delete");
-    };
+    const handleDelete = useCallback(() => {
+      reactFlow.deleteElements({ nodes: [{ id }] });
+    }, [id, reactFlow]);
 
     return (
       <>
@@ -52,9 +56,9 @@ export const StickyNoteNode = React.memo(
               },
             )}
             style={{ wordBreak: "break-word" }}
-          >
-            {content}
-          </textarea>
+            value={content}
+            onChange={handleChange}
+          />
         </div>
 
         <NodeToolbar onDelete={handleDelete} />
