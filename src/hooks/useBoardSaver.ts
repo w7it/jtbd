@@ -133,6 +133,18 @@ export function useBoardSaver({
   const [hasChanges, resetHasChanges] = useChangesDetector(nodes, edges);
 
   useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (hasChanges) {
+        event.preventDefault();
+        event.returnValue = "";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [hasChanges]);
+
+  useEffect(() => {
     if (!boardData) return;
     const nodes = boardData.nodes.slice();
     const edges = boardData.edges.slice();
