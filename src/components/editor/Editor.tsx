@@ -66,6 +66,8 @@ function EditorInternal(props: EditorProps) {
       <ReactFlow
         nodes={props.nodes as BoardNode[]}
         edges={props.edges as Edge[]}
+        snapToGrid
+        snapGrid={[4, 4]}
         onNodesChange={props.onNodesChange}
         onEdgesChange={props.onEdgesChange}
         onConnect={props.onConnect}
