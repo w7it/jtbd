@@ -51,6 +51,10 @@ const toProjectJobNode = (node: NodeDB): ProjectJobNode => {
     data: {
       id: node.projectJobData.id,
       name: node.projectJobData.name,
+      when: node.projectJobData.data.when ?? "",
+      soThat: node.projectJobData.data.soThat ?? "",
+      importance: node.projectJobData.data.importance ?? "",
+      frequency: node.projectJobData.data.frequency ?? "",
     },
   };
 };

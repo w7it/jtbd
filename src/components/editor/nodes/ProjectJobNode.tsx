@@ -7,7 +7,7 @@ import { BoardNode, ProjectJobData } from "@/constants/boards.ts";
 export const ProjectJobNode = React.memo(
   ({ id, data: rawData, selected }: NodeProps<Node<BoardNode["data"]>>) => {
     const data = rawData as ProjectJobData;
-    const { name } = data;
+    const { name, when, soThat, importance, frequency } = data;
     const reactFlow = useReactFlow();
 
     const handleDelete = useCallback(() => {
@@ -21,6 +21,34 @@ export const ProjectJobNode = React.memo(
       [id, reactFlow],
     );
 
+    const handleWhenChange = useCallback(
+      (newWhen: string) => {
+        reactFlow.updateNodeData(id, { when: newWhen });
+      },
+      [id, reactFlow],
+    );
+
+    const handleSoThatChange = useCallback(
+      (newSoThat: string) => {
+        reactFlow.updateNodeData(id, { soThat: newSoThat });
+      },
+      [id, reactFlow],
+    );
+
+    const handleImportanceChange = useCallback(
+      (newImportance: string) => {
+        reactFlow.updateNodeData(id, { importance: newImportance });
+      },
+      [id, reactFlow],
+    );
+
+    const handleFrequencyChange = useCallback(
+      (newFrequency: string) => {
+        reactFlow.updateNodeData(id, { frequency: newFrequency });
+      },
+      [id, reactFlow],
+    );
+
     return (
       <>
         <div
@@ -30,9 +58,34 @@ export const ProjectJobNode = React.memo(
           )}
         >
           <TextInput
+            label="When:"
+            selected={selected}
+            value={when ?? ""}
+            onChange={handleWhenChange}
+          />
+          <TextInput
+            label="Want:"
             selected={selected}
             value={name ?? ""}
             onChange={handleNameChange}
+          />
+          <TextInput
+            label="So that:"
+            selected={selected}
+            value={soThat ?? ""}
+            onChange={handleSoThatChange}
+          />
+          <TextInput
+            label="Importance:"
+            selected={selected}
+            value={importance ?? ""}
+            onChange={handleImportanceChange}
+          />
+          <TextInput
+            label="Frequency:"
+            selected={selected}
+            value={frequency ?? ""}
+            onChange={handleFrequencyChange}
           />
         </div>
 
@@ -44,10 +97,12 @@ export const ProjectJobNode = React.memo(
 
 const TextInput = React.memo(
   ({
+    label,
     selected,
     value,
     onChange,
   }: {
+    label: string;
     selected: boolean;
     value: string;
     onChange: (value: string) => void;
@@ -63,10 +118,12 @@ const TextInput = React.memo(
       [],
     );
 
+    if (!value && !selected) return null;
+
     return (
       <div className="flex items-center gap-2 flex-wrap">
-        <label className="text-[10px] text-gray-500 whitespace-nowrap vertical-align-middle">
-          I want to:
+        <label className="text-[10px] text-gray-500 whitespace-nowrap vertical-align-middle cursor-[inherit]">
+          {label}
         </label>
         <textarea
           className={cn(

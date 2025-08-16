@@ -31,7 +31,14 @@ const isStickyNoteChanged = (prev: StickyNoteNode, node: StickyNoteNode) => {
 };
 
 const isProjectJobChanged = (prev: ProjectJobNode, node: ProjectJobNode) => {
-  return prev.data.id !== node.data.id || prev.data.name !== node.data.name;
+  return (
+    prev.data.id !== node.data.id ||
+    prev.data.name !== node.data.name ||
+    prev.data.when !== node.data.when ||
+    prev.data.soThat !== node.data.soThat ||
+    prev.data.importance !== node.data.importance ||
+    prev.data.frequency !== node.data.frequency
+  );
 };
 
 const isProjectInterviewJobChanged = (

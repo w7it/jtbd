@@ -47,6 +47,10 @@ export type ProjectJobData = z.infer<typeof zProjectJobData>;
 export const zProjectJobData = z.object({
   id: zProjectJobId,
   name: z.string(),
+  when: z.string(),
+  soThat: z.string(),
+  importance: z.string(),
+  frequency: z.string(),
 });
 export type ProjectJobNode = z.infer<typeof zProjectJobNode>;
 export const zProjectJobNode = zNode(zProjectJobData);

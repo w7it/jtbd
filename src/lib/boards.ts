@@ -28,5 +28,12 @@ export const genEmptyProjectJobNode = (): ProjectJobNode => ({
   id: genBoardNodeId(),
   type: NodeType.PROJECT_JOB,
   position: { x: 0, y: 0 },
-  data: { id: genProjectJobId(), name: "" },
+  data: {
+    id: genProjectJobId(),
+    name: "to ...",
+    when: "",
+    soThat: "",
+    importance: "",
+    frequency: "",
+  },
 });

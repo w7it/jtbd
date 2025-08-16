@@ -87,7 +87,10 @@ export const projectJobs = sqliteTable("project_jobs", {
   data: text("data", { mode: "json" })
     .notNull()
     .$type<{
-      readonly job?: string;
+      readonly when?: string;
+      readonly soThat?: string;
+      readonly importance?: string;
+      readonly frequency?: string;
     }>()
     .$defaultFn(() => ({})),
 

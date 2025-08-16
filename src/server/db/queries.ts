@@ -187,7 +187,12 @@ const createProjectJob = async ({
     id: data.id,
     projectVersionId,
     name: data.name,
-    data: {},
+    data: {
+      when: data.when,
+      soThat: data.soThat,
+      importance: data.importance,
+      frequency: data.frequency,
+    },
   });
 };
 
@@ -201,7 +206,15 @@ const updateProjectJob = async ({ tx, node }: { tx: Tx; node: BoardNode }) => {
 
   await tx
     .update(projectJobs)
-    .set({ name: data.name })
+    .set({
+      name: data.name,
+      data: {
+        when: data.when,
+        soThat: data.soThat,
+        importance: data.importance,
+        frequency: data.frequency,
+      },
+    })
     .where(eq(projectJobs.id, data.id));
 };
 
