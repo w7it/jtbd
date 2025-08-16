@@ -1,13 +1,22 @@
 import { Button } from "@/components/ui/button.tsx";
 import * as ReactFlow from "@xyflow/react";
-import { Trash2Icon } from "lucide-react";
+import { ExpandIcon, Trash2Icon } from "lucide-react";
 
 type NodeToolbarProps = {
+  readonly onSizeChange?: () => void;
   readonly onDelete?: () => void;
 };
 
-export function NodeToolbar({ onDelete }: NodeToolbarProps) {
+export function NodeToolbar({ onSizeChange, onDelete }: NodeToolbarProps) {
   const buttons: React.ReactNode[] = [];
+
+  if (onSizeChange) {
+    buttons.push(
+      <Button key="size" size="icon" variant="ghost" onClick={onSizeChange}>
+        <ExpandIcon className="transition group-hover:text-blue-600" />
+      </Button>,
+    );
+  }
 
   if (onDelete) {
     buttons.push(
