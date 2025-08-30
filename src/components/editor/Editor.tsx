@@ -22,6 +22,7 @@ import {
   genEmptyProjectJobNode,
   genEmptyStickyNoteNode,
 } from "@/lib/boards.ts";
+import { useCopyPasteNode } from "@/hooks/useCopyPasteNode.ts";
 
 type EditorProps = {
   readonly children: React.ReactNode;
@@ -35,6 +36,7 @@ type EditorProps = {
 function EditorInternal(props: EditorProps) {
   const [activeTool, setActiveTool] = useState<EditorTool>(EditorTool.CURSOR);
   const { screenToFlowPosition } = useReactFlow();
+  const { handleMouseMove } = useCopyPasteNode(props.onNodesChange);
 
   const onPaneClick = useCallback(
     (event: React.MouseEvent) => {
@@ -72,6 +74,7 @@ function EditorInternal(props: EditorProps) {
         onEdgesChange={props.onEdgesChange}
         onConnect={props.onConnect}
         onPaneClick={onPaneClick}
+        onPaneMouseMove={handleMouseMove}
         nodeTypes={COMPONENTS_BY_TYPE}
         attributionPosition="bottom-left"
         proOptions={{ hideAttribution: true }}
