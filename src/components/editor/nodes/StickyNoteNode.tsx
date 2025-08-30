@@ -3,6 +3,7 @@ import { Node, NodeProps, useReactFlow } from "@xyflow/react";
 import { BoardNode, StickyNoteData } from "@/constants/boards.ts";
 import { cn } from "@/lib/utils.ts";
 import { NodeToolbar } from "../components/NodeToolbar.tsx";
+import { MarkdownEditor } from "@/components/markdown/MarkdownEditor.tsx";
 
 const SIZES: StickyNoteData["size"][] = ["xs", "sm", "md", "lg", "xl"];
 
@@ -50,7 +51,8 @@ export const StickyNoteNode = React.memo(
           )}
           onKeyDown={handleKeyDown}
         >
-          <textarea
+          <MarkdownEditor
+            value={content}
             className={cn(
               "p-4 w-full h-full text-gray-800 whitespace-pre-wrap break-words outline-none resize-none",
               selected ? "cursor-text nodrag" : "cursor-move",
@@ -62,9 +64,7 @@ export const StickyNoteNode = React.memo(
                 xl: "p-4",
               }[size],
             )}
-            style={{ wordBreak: "break-word" }}
-            value={content}
-            onChange={handleChange}
+            onChange={(content) => reactFlow.updateNodeData(id, { content })}
           />
         </div>
 
