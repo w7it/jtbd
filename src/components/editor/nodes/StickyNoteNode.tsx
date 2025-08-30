@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Node, NodeProps, useReactFlow } from "@xyflow/react";
 import { BoardNode, StickyNoteData } from "@/constants/boards.ts";
 import { cn } from "@/lib/utils.ts";
@@ -33,6 +33,11 @@ export const StickyNoteNode = React.memo(
     const handleDelete = useCallback(() => {
       reactFlow.deleteElements({ nodes: [{ id }] });
     }, [id, reactFlow]);
+
+    useEffect(() => {
+      if (selected) return;
+      window.getSelection()?.removeAllRanges();
+    }, [selected]);
 
     return (
       <>
