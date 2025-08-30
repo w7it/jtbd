@@ -16,6 +16,7 @@ import { Route as GuestRouteImport } from './routes/_guest'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GuestSignUpRouteImport } from './routes/_guest.sign-up'
 import { Route as GuestSignInRouteImport } from './routes/_guest.sign-in'
+import { ServerRoute as ApiMcpServerRouteImport } from './routes/api/mcp'
 import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth/$'
 
 const rootServerRouteImport = createServerRootRoute()
@@ -42,6 +43,11 @@ const GuestSignInRoute = GuestSignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
   getParentRoute: () => GuestRoute,
+} as any)
+const ApiMcpServerRoute = ApiMcpServerRouteImport.update({
+  id: '/api/mcp',
+  path: '/api/mcp',
+  getParentRoute: () => rootServerRouteImport,
 } as any)
 const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
   id: '/api/auth/$',
@@ -87,24 +93,28 @@ export interface RootRouteChildren {
   UserRoute: typeof UserRoute
 }
 export interface FileServerRoutesByFullPath {
+  '/api/mcp': typeof ApiMcpServerRoute
   '/api/auth/$': typeof ApiAuthSplatServerRoute
 }
 export interface FileServerRoutesByTo {
+  '/api/mcp': typeof ApiMcpServerRoute
   '/api/auth/$': typeof ApiAuthSplatServerRoute
 }
 export interface FileServerRoutesById {
   __root__: typeof rootServerRouteImport
+  '/api/mcp': typeof ApiMcpServerRoute
   '/api/auth/$': typeof ApiAuthSplatServerRoute
 }
 export interface FileServerRouteTypes {
   fileServerRoutesByFullPath: FileServerRoutesByFullPath
-  fullPaths: '/api/auth/$'
+  fullPaths: '/api/mcp' | '/api/auth/$'
   fileServerRoutesByTo: FileServerRoutesByTo
-  to: '/api/auth/$'
-  id: '__root__' | '/api/auth/$'
+  to: '/api/mcp' | '/api/auth/$'
+  id: '__root__' | '/api/mcp' | '/api/auth/$'
   fileServerRoutesById: FileServerRoutesById
 }
 export interface RootServerRouteChildren {
+  ApiMcpServerRoute: typeof ApiMcpServerRoute
   ApiAuthSplatServerRoute: typeof ApiAuthSplatServerRoute
 }
 
@@ -149,6 +159,13 @@ declare module '@tanstack/react-router' {
 }
 declare module '@tanstack/react-start/server' {
   interface ServerFileRoutesByPath {
+    '/api/mcp': {
+      id: '/api/mcp'
+      path: '/api/mcp'
+      fullPath: '/api/mcp'
+      preLoaderRoute: typeof ApiMcpServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -180,6 +197,7 @@ export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 const rootServerRouteChildren: RootServerRouteChildren = {
+  ApiMcpServerRoute: ApiMcpServerRoute,
   ApiAuthSplatServerRoute: ApiAuthSplatServerRoute,
 }
 export const serverRouteTree = rootServerRouteImport
