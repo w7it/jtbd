@@ -145,13 +145,13 @@ export function useBoardSaver({
   }, [hasChanges]);
 
   useEffect(() => {
-    if (!boardData) return;
+    if (!boardData?.nodes || !boardData?.edges) return;
     const nodes = boardData.nodes.slice();
     const edges = boardData.edges.slice();
     setNodes(nodes);
     setEdges(edges);
     resetHasChanges(nodes, edges);
-  }, [boardData, resetHasChanges]);
+  }, [boardData?.nodes, boardData?.edges, resetHasChanges]);
 
   const onNodesChange = useCallback((changes: NodeChange<BoardNode>[]) => {
     handleNodesChange(changes);
