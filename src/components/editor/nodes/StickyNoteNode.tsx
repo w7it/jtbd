@@ -14,10 +14,8 @@ export const StickyNoteNode = React.memo(
     const reactFlow = useReactFlow();
 
     const handleChange = useCallback(
-      (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const newContent = event.target.value;
-        reactFlow.updateNodeData(id, { content: newContent });
-      },
+      (content: string | undefined) =>
+        reactFlow.updateNodeData(id, { content }),
       [id, reactFlow],
     );
 
@@ -69,7 +67,7 @@ export const StickyNoteNode = React.memo(
                 xl: "p-4",
               }[size],
             )}
-            onChange={(content) => reactFlow.updateNodeData(id, { content })}
+            onChange={handleChange}
           />
         </div>
 
